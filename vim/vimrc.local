@@ -1,0 +1,92 @@
+" local vim config file for spf13
+
+
+" change newcompplache to youcompleteme for autocomplete
+UnBundle 'Shougo/neocompplache'
+Bundle 'Valloric/YouCompleteMe'
+
+" something to do with you complete me, I forget
+let g:ycm_autoclose_preview_window_after_completion=1
+nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+" https://github.com/klen/python-mode/issues/342
+let g:pymode_rope_lookup_project = 0
+
+" color scheme
+colorscheme molokai
+
+" make the gui font less huge
+set guifont=Monospace\ 10
+
+" set Canadian English
+set spelllang=en_ca
+
+" allow toggling on and off of spelling.
+" I found that the regions that were defined as no spellcheck zones
+" were not good enough. So, when I'm checking spelling, I simply
+" remove all syntax highlighting, and spellcheck everything 
+" including code.
+nmap <silent> <leader>s :call SpellToggle() <CR>
+let g:spellSyntaxBackOn = 0
+function SpellToggle()
+    if &spell == 0
+        " spell checker is off
+
+        " toggle spellchecker on
+        :set spell!
+
+        " check if syntax highlight is on
+        if exists("g:syntax_on")
+            " if it is on, turn it off
+            :syntax off
+            hi SpellBad cterm=underline
+            hi SpellBad guibg=none ctermbg=none
+
+            " make note that you turned it off
+            let g:spellSyntaxBackOn = 1
+        endif
+    else
+        " spell checker is on
+        " toggle spell checker off
+        :set spell!
+
+        " check if SpellToggle() previously turned off syntax highlighting
+        if g:spellSyntaxBackOn == 1
+            " if so, turn it back on
+            :syntax on
+            let g:spellSyntaxBackOn = 0
+        endif
+    endif
+endfunction
+
+" easier save and entering normal mode if not already in normal mode
+map <F2> :w! <CR>
+imap <F2> <Esc>:w! <CR>
+
+" easier way to get into normal mode from insert mode
+imap <C-j> <esc>
+
+" another way to get into insert mode
+nmap <tab> a
+
+" have ctrlp default to showing me the open buffers
+let g:ctrlp_cmd = 'CtrlPBuffer'
+
+" after opening a file from NERDTree don't close NERDTree
+let NERDTreeQuitOnOpen = 0
+
+" Allow a file from NERDTree to be opened with a single click
+let NERDTreeMouseMode = 3
+
+" Allow windows to be navigated by pressing alt and a direction
+nmap <silent> <A-Up> :wincmd k<CR>
+nmap <silent> <A-Down> :wincmd j<CR>
+nmap <silent> <A-Left> :wincmd h<CR>
+nmap <silent> <A-Right> :wincmd l<CR>
+
+
+" removes buffers from airline. Without this there would be so many buffers
+" I wouldn't know what my active file is. There are many alternative ways
+" to view current buffers, like ctrl+p, so, I don't need this.
+let g:airline#extensions#bufferline#enabled = 0
+
