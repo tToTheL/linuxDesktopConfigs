@@ -28,7 +28,9 @@ set spelllang=en_ca
 " including code.
 nmap <silent> <leader>s :call SpellToggle() <CR>
 let g:spellSyntaxBackOn = 0
-function SpellToggle()
+" the ! after function is needed to allow vimrc.local to be
+" reloaded while vim is running
+function! SpellToggle()
     if &spell == 0
         " spell checker is off
 
@@ -90,3 +92,8 @@ nmap <silent> <A-Right> :wincmd l<CR>
 " to view current buffers, like ctrl+p, so, I don't need this.
 let g:airline#extensions#bufferline#enabled = 0
 
+
+" Customizing NERDCommenter here a little bit. By doing this I can
+" use <leader>cc to basically do all the comment toggling that
+" I would expect.
+map <leader>cc <leader>c<space>
