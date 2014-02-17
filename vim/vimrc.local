@@ -97,3 +97,29 @@ let g:airline#extensions#bufferline#enabled = 0
 " use <leader>cc to basically do all the comment toggling that
 " I would expect.
 map <leader>cc <leader>c<space>
+
+
+" these comments options don't seem to work on all file types
+" does not work on this file, but does work on a blank file
+" http://vimdoc.sourceforge.net/htmldoc/change.html#format-comments
+" comma seperated list
+""set comments = ""
+
+" python comments, each new line gets a #
+set comments=:#
+
+" javascript comments, each new line gets //
+set comments+=://
+
+" bullet list comments, - or * does not repeat, space 
+" after required
+set comments+=fb:*
+set comments+=fb:-
+
+" vim comments, " repeats
+" set comments+=:\"
+
+
+set autoindent
+"set formatoptions=rtcq
+set formatoptions=rtqc
