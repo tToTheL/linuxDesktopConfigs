@@ -1,8 +1,7 @@
 " the nice thing about using an F* key as a leader is that it works in
 " insert mode too, but allow \ too!
 let mapleader = "\\"
-nmap <F8> \ 
-
+nmap <F8> \
 
 " # Things required by vunlde
 set nocompatible              " be iMproved
@@ -41,7 +40,7 @@ Bundle 'terryma/vim-multiple-cursors'
 " status line of sorts
 Bundle 'bling/vim-airline'
 
-" 
+"
 " Bundle 'Rykka/easydigraph.vim'
 
 
@@ -49,7 +48,7 @@ Bundle 'Lokaltog/vim-easymotion'
 
 
 " expand html shortcuts. For example typing strong{I am bold} and then
-" <c-y>, will expand to <strong>I am bold</strong> 
+" <c-y>, will expand to <strong>I am bold</strong>
 " and that just scratches the surface
 " I have mapped <c-y>y to <c-y>, because hitting the comma at the end was pretty
 " difficult.
@@ -71,7 +70,13 @@ Bundle "sirver/ultisnips"
 Bundle 'honza/vim-snippets'
 
 
+Bundle "vim-scripts/taglist.vim"
+
 " ## python
+
+" visual indent
+Bundle 'nathanaelkane/vim-indent-guides'
+
 " python code completion
 Bundle 'davidhalter/jedi-vim'
 
@@ -100,7 +105,7 @@ filetype plugin indent on
 " python comments, each new line gets a #
 set comments=b:#
 
-"" bullet list comments, - or * does not repeat, space 
+"" bullet list comments, - or * does not repeat, space
 "" after required
 set comments+=b:*
 set comments+=fb:-
@@ -112,7 +117,8 @@ set formatlistpat=^\\s*\\(\\d\\\|[-*#]\\)\\+[\\]:.)}\\t\ ]\\s*
 set autoindent
 
 
-
+" esc
+imap jj <Esc>
 
 
 
@@ -128,7 +134,9 @@ set hidden
 autocmd BufEnter * silent! lcd %:p:h
 
 " create a visual column at 81+
-let &colorcolumn=join(range(81,999),",")
+"if has("gui_running")
+    " let &colorcolumn=join(range(81,999),",")
+"endif
 
 " set my language, Canadian English
 set spelllang=en_ca
@@ -142,7 +150,7 @@ set autoread
 nnoremap <F9> :!chmod u+x %:p<cr> :!%:p<cr>
 
 " relative line numbers
-autocmd InsertEnter * :set nornu
+autocmd InsertEnter * :set number
 autocmd InsertLeave * :set relativenumber
 
 " Automatic reloading of .vimrc
@@ -205,9 +213,26 @@ set guioptions-=L  " remove left-hand scroll bar
 " possibly helps in some sort of border?
 set guiheadroom=0
 
+" show whitepsace
+set listchars=tab:›\ ,trail:•,extends:#,nbsp:.
+set list
+
 " save and enter normal mode with <F2>
 map <F2> :w!<CR>
 imap <F2> <esc>:w! <CR>
+nnoremap <F2> my:%s/\s\+$//<CR>`y
+
+function! StripTrailingWhitespace()
+" Preparation: save last search, and cursor position.
+    let _s=@/
+    let l = line(".")
+    let c = col(".")
+    " do the business:
+    %s/\s\+$//e
+    " clean up: restore previous search history, and cursor position
+    let @/=_s
+    call cursor(l, c)
+endfunction
 
 " allow for copy pasting between vim and other applications
 " like a sane person.
@@ -219,10 +244,11 @@ vnoremap <c-c> "+y
 inoremap <c-j> <ESC>
 
 " make backspace work like most other apps
-set backspace=2 
+set backspace=2
 
 " colour scheme
-colorscheme molokai
+"colorscheme molokai
+colorscheme tutticolori
 
 " indenting of a line. Feature already exists in normal mode, but I wanted
 " it in insert mode, and added two more mappings for normal mode just for
@@ -250,6 +276,19 @@ noremap <Up> <NOP>
 noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
+
+
+
+autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
+
+" ################### Taglist #############################
+nnoremap <silent> <F8> :TlistToggle<CR>
+let Tlist_Use_Right_Window = 1
+
+
+" ################### Indent Guides #######################
+let g:indent_guides_guide_size = 1
+let g:indent_guides_enable_on_vim_startup = 1
 
 
 " ################### easy motion #########################
@@ -306,7 +345,7 @@ let NERDTreeQuitOnOpen = 0
 
 " to fix that pymode is slow on typings '.'s
 " let g:pymode_rope = 0
-let g:pymode_rope_lookup_project = 0 
+let g:pymode_rope_lookup_project = 0
 
 
 " ################# ctrlp ##################################
@@ -330,49 +369,6 @@ let g:ctrlp_open_new_file = 'r'
 
 
 
-
-" vim --version
-" VIM - Vi IMproved 7.4 (2013 Aug 10, compiled Feb 15 2014 13:22:06)
-" Included patches: 1-182
-" Compiled by tory@torysComputer
-" Huge version with GTK2-GNOME GUI.  Features included (+) or not (-):
-" +acl             +farsi           +mouse_netterm   +syntax
-" +arabic          +file_in_path    +mouse_sgr       +tag_binary
-" +autocmd         +find_in_path    -mouse_sysmouse  +tag_old_static
-" +balloon_eval    +float           +mouse_urxvt     -tag_any_white
-" +browse          +folding         +mouse_xterm     -tcl
-" ++builtin_terms  -footer          +multi_byte      +terminfo
-" +byte_offset     +fork()          +multi_lang      +termresponse
-" +cindent         +gettext         -mzscheme        +textobjects
-" +clientserver    -hangul_input    +netbeans_intg   +title
-" +clipboard       +iconv           +path_extra      +toolbar
-" +cmdline_compl   +insert_expand   -perl            +user_commands
-" +cmdline_hist    +jumplist        +persistent_undo +vertsplit
-" +cmdline_info    +keymap          +postscript      +virtualedit
-" +comments        +langmap         +printer         +visual
-" +conceal         +libcall         +profile         +visualextra
-" +cryptv          +linebreak       -python          +viminfo
-" +cscope          +lispindent      +python3         +vreplace
-" +cursorbind      +listcmds        +quickfix        +wildignore
-" +cursorshape     +localmap        +reltime         +wildmenu
-" +dialog_con_gui  -lua             +rightleft       +windows
-" +diff            +menu            -ruby            +writebackup
-" +digraphs        +mksession       +scrollbind      +X11
-" +dnd             +modify_fname    +signs           -xfontset
-" -ebcdic          +mouse           +smartindent     +xim
-" +emacs_tags      +mouseshape      -sniff           +xsmp_interact
-" +eval            +mouse_dec       +startuptime     +xterm_clipboard
-" +ex_extra        +mouse_gpm       +statusline      -xterm_save
-" +extra_search    -mouse_jsbterm   -sun_workshop    +xpm
-"    system vimrc file: "$VIM/vimrc"
-"      user vimrc file: "$HOME/.vimrc"
-"  2nd user vimrc file: "~/.vim/vimrc"
-"       user exrc file: "$HOME/.exrc"
-"   system gvimrc file: "$VIM/gvimrc"
-"     user gvimrc file: "$HOME/.gvimrc"
-" 2nd user gvimrc file: "~/.vim/gvimrc"
-"     system menu file: "$VIMRUNTIME/menu.vim"
-"   fall-back for $VIM: "/usr/local/share/vim"
-" Compilation: gcc -c -I. -Iproto -DHAVE_CONFIG_H -DFEAT_GUI_GTK  -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/harfbuzz   -pthread -DORBIT2=1 -D_REENTRANT -I/usr/include/libgnomeui-2.0 -I/usr/include/libart-2.0 -I/usr/include/gconf/2 -I/usr/include/gnome-keyring-1 -I/usr/include/libgnome-2.0 -I/usr/include/libbonoboui-2.0 -I/usr/include/libgnomecanvas-2.0 -I/usr/include/gtk-2.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/gnome-vfs-2.0 -I/usr/lib/x86_64-linux-gnu/gnome-vfs-2.0/include -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/orbit-2.0 -I/usr/include/libbonobo-2.0 -I/usr/include/bonobo-activation-2.0 -I/usr/include/libxml2 -I/usr/include/pango-1.0 -I/usr/include/gail-1.0 -I/usr/include/harfbuzz -I/usr/include/freetype2 -I/usr/include/atk-1.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/cairo -I/usr/include/gio-unix-2.0/ -I/usr/include/pixman-1 -I/usr/include/libpng12     -g -O2 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1      
-" Linking: gcc   -L/usr/local/lib -Wl,--as-needed -o vim   -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lglib-2.0     -lgnomeui-2 -lSM -lICE -lbonoboui-2 -lgnomevfs-2 -lgnomecanvas-2 -lgnome-2 -lpopt -lbonobo-2 -lbonobo-activation -lORBit-2 -lart_lgpl_2 -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo -lpango-1.0 -lfreetype -lfontconfig -lgconf-2 -lgthread-2.0 -lgmodule-2.0 -lgobject-2.0 -lglib-2.0   -lSM -lICE -lXpm -lXt -lX11 -lXdmcp -lSM -lICE  -lm -ltinfo -lnsl  -lselinux  -lacl -lattr -lgpm -ldl     -L/usr/lib/python3.3/config-3.3m-x86_64-linux-gnu -lpython3.3m -lpthread -ldl -lutil -lm     
-" 
+" how to compile
+" install python dev stuff
+" ./configure --enable-python3interp --enable-gui=auto --enable-gtk2-check --with-features=huge --with-x --enable-gnome-check --with-python3-config-dir=$(python3.4-config --configdir) --enable-multibyte
